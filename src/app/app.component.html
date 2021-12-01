@@ -1,0 +1,80 @@
+<mat-tab-group mat-align-tabs="start">
+<mat-tab label="Search">
+<div class="container text-center">
+  <p>Showing results for {{searchText}}</p>
+  <h1>{{title}}</h1>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="search-hero">
+      <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="on" placeholder="Start searching " list="dynmicUserIds">
+      <datalist id="dynmicUserIds">
+   <option *ngFor="let item of companyNames" [value]="item">{{item}}</option>
+</datalist>
+    </div>
+    
+      <div class="form-group">
+        <label for="exampleFormControlSelect1">Country: {{countrySelected}}</label>
+        <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]="countrySelected" (click)="updateList($event)">
+          <option *ngFor="let country of countries" >{{country}}</option>
+          
+        </select>
+      </div>
+      <br>
+      
+    
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Company Name</th>
+        <th>Country</th>
+        <th>Description</th>
+        <th>Details</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let company of companies | filter:searchText | paginate: config  ">
+        
+        <td >{{company.id}}</td>
+        <td [innerHTML]="company.name |highlight: searchText"></td>
+        <td [innerHTML]="company.country |highlight: searchText"></td>
+        <td [innerHTML]="company.description |highlight: searchText"></td>
+        <td><button class="btn btn-primary" (click)="openModal(true,company)">Show More</button></td>
+       
+      </tr>
+      </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  </div>
+  <div id="mdlSample" class="modal fade" role="dialog" [ngStyle]="{'display': mdlSampleIsOpen ? 'block' : 'none', 'opacity': 1}">
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <div class="modal-header">
+    <h4 class="modal-title">Details</h4>
+    </div>
+    <div class="modal-body"><b>Name</b>: {{modalData.name}}<br>
+      <b>Website</b>: {{modalData.website}}<br>
+      <b>Address</b>: {{modalData.address}}<br>
+      <b>Country</b>: {{modalData.country}}<br>
+      <b>Current Employee</b>: {{modalData.currentemployee}}<br>
+      <b>Description</b>: {{modalData.description}}<br>
+      <b>Domain</b>: {{modalData.domain}}<br>
+      <b>Founded Year</b>: {{modalData.foundedyear}}<br>
+      <b>Industry</b>: {{modalData.industry}}<br>
+      <b>Logourl</b>: {{modalData.logourl}}<br>
+      <b>Total Employee</b>: {{modalData.totalemployee}}<br>
+
+    </div>
+    <div class="modal-footer" align="right">
+                <button type="button" id="btnOK" class="btn btn-success" (click)="btnOKClick()"><i class="fa fa-check fa-fw"></i> Ok</button>
+               
+    </div>
+    </div>
+    
+    </div>
+</div>
+</div>
+</mat-tab>
+<mat-tab label="Visualize"><app-barchart></app-barchart></mat-tab>
+</mat-tab-group>
